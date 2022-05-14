@@ -6,11 +6,18 @@ class Button(pygame.sprite.Sprite):
         self.x = xpos
         self.y = ypos
 
+        self.back = pygame.Surface((100, 30))
+        self.back.fill((255, 255, 255))
+        self.backrect = self.back.get_rect()
+
+        self.backrect.center = (xpos,ypos)
+        
+
         # Button Text 
         self.font = pygame.font.Font('freesansbold.ttf', fontsize)
-        self.textcolor = (255, 0, 255)
+        self.textcolor = (0, 128, 0)
 
-        self.text = self.font.render(text, True, self.textcolor, (0,255,0))
+        self.text = self.font.render(text, True, self.textcolor)
 
         self.rect = self.text.get_rect()
         self.rect.center = (xpos,ypos)
@@ -21,6 +28,7 @@ class Button(pygame.sprite.Sprite):
         self.y = self.rect.y
 
     def draw(self, screen):
+        screen.blit(self.back, self.backrect)
         screen.blit(self.text, self.rect)
     
     def getBoundaries(self):
@@ -33,8 +41,8 @@ class Menu:
         self.title = Button(renderer.width/2, 50, "Title", 32)
 
         self.startgame = Button(renderer.width/2, renderer.height/2, "Easy", 24)
-        self.credits = Button(renderer.width/2, renderer.height/2+30, "Hard", 24)
-        self.settings = Button(renderer.width/2, renderer.height/2+60, "Settings", 24)
+        self.credits = Button(renderer.width/2, renderer.height/2+50, "Hard", 24)
+        self.settings = Button(renderer.width/2, renderer.height/2+100, "Settings", 24)
 
         self.buttons = (self.startgame, self.credits, self.settings)
 

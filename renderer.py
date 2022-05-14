@@ -6,7 +6,7 @@ from pile import Pile
 from menu import Menu
 from settings import Settings
 from bin import Bins
-from gamelogic import GameLogic
+from gameLogic import GameLogic
 
 class Renderer:
 
