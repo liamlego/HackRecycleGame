@@ -19,9 +19,10 @@ class Pile(pygame.sprite.Sprite):
 
         self.bins = Bins()
 
+        self.item = 0
 
-    def spawnItem(self):
-        b = 1
+    def spawnItem(self, event):
+        self.item = Item()
 
 
     def render(self, screen):
