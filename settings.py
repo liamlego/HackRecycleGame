@@ -9,5 +9,5 @@ class Settings:
         self.x = 0
 
 
-    def update(self, event):
+    def update(self, renderer, event):
         self.x = 0

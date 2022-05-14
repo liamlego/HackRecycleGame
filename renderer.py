@@ -5,71 +5,68 @@ from river import River
 from pile import Pile
 from menu import Menu
 from settings import Settings
+from bin import Bins
+from gamelogic import GameLogic
 
 class Renderer:
 
     def __init__(self):
         self.running = True
         self.surface = None
-        self.size = self.width, self.height = 640, 400
+        self.size = self.width, self.height = 1400, 900
         self.color = (255,255,255)
-
-        
-
-        # States: 
-        # Menu state:     0
-        # River State:    1
-        # Pile State:     2
-        # Settings State: 3
-        self.state = 0
 
     def on_init(self):
         pygame.init()
         self.surface = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self.running = True
 
-        self.dot = Item(12, 15)
-        #self.menu = Menu(self)
-        self.pile = Pile()
+        self.menu = Menu(self)
+        self.pile = Pile(self.width, self.height)
         self.river = River()
         self.settings = Settings()
+        self.bins = Bins()
+
+        self.logic = GameLogic()
 
     #Event listener
     def on_event(self, event):
         if event.type == pygame.QUIT:
             self.running = False
-            
-        
-        #if self.state == 0:
-            #self.menu.update(event)
-        #elif self.state == 1:
-            #self.river.update(event)
-        #elif self.state == 2:
-            #self.pile.update(event)
-        #else:
-            #self.settings.update(event)
+               
+        if self.logic.getState() == 0:
+            self.menu.update(self.logic, event)
+        elif self.logic.getState() == 1:
+            self.river.update(self.logic, event)
+        elif self.logic.getState() == 2:
+            self.pile.update(self.logic, event)
+        else:
+            self.settings.update(self.logic, event)
 
     # Render updater
     def on_render(self):
         new_surface = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self.surface.blit(new_surface, (0, 0))
-
-
-        #self.dot.draw(self.surface)
-        #self.dot.update()
-
-        self.pile.draw(self.surface)
-        self.pile.update()
         
+        #self.bins.render(self.surface)
 
-        # if self.state == 0:
-        #     self.menu.render(self.surface)
-        # elif self.state == 1:
-        #     self.river.render()
-        # elif self.state == 2:
-        #     self.pile.render()
-        # else:
-        #    self.settings.render()
+                                                # CIRCLE STUFF !!!
+                                                #size = 150
+                                                #self.image3 = pygame.Surface([size, size])
+                                                #pygame.draw.circle(self.image3, self.color, (size / 2, size / 2), size / 2)
+                                                #self.rect3 = self.image3.get_rect()
+                                                #self.rect3.center = 700, 775
+                                                #self.surface.blit(self.image3, self.rect3)
+
+        
+        if self.logic.getState() == 0:
+            self.menu.render(self.surface)
+        elif self.logic.getState() == 1:
+            self.river.render(self.surface)
+        elif self.logic.getState() == 2:
+            self.pile.render(self.surface)
+        else:
+           self.settings.render(self.surface)
 
         pygame.display.flip()
 

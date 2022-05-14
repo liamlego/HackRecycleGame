@@ -1,13 +1,16 @@
 import pygame
 
-class River:
+class River():
 
     def __init__(self):
-        self.x = 0
+        b = 1
+        #self.image = pygame.image.load("images", "river_background.png")
+        #self.rect = self.image.get_rect()
 
-    def render(self):
-        self.x = 0
+    def render(self, screen):
+        b = 1
+        
 
     # change river animation
-    # def update(self, event):
-    #     self.x = 0
+    def update(self, renderer, event):
+        b = 1
