@@ -6,11 +6,11 @@ class Button(pygame.sprite.Sprite):
         self.x = xpos
         self.y = ypos
 
-        self.button_color = (0,0,128)
+        self.button_color = (0,50,128)
 
         # Button Text 
         self.font = pygame.font.Font('freesansbold.ttf', fontsize)
-        self.textcolor = (0, 128, 0)
+        self.textcolor = (255, 255, 255)
 
         self.text = self.font.render(text, True, self.textcolor)
 

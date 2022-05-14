@@ -14,6 +14,7 @@ class Renderer:
         self.running = True
         self.surface = None
         self.size = self.width, self.height = 1400, 900
+        
         self.color = (255,255,255)
 
     def on_init(self):
