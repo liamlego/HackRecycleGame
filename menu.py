@@ -6,12 +6,7 @@ class Button(pygame.sprite.Sprite):
         self.x = xpos
         self.y = ypos
 
-        self.back = pygame.Surface((100, 30))
-        self.back.fill((255, 255, 255))
-        self.backrect = self.back.get_rect()
-
-        self.backrect.center = (xpos,ypos)
-        
+        self.button_color = (0,0,128)
 
         # Button Text 
         self.font = pygame.font.Font('freesansbold.ttf', fontsize)
@@ -28,8 +23,9 @@ class Button(pygame.sprite.Sprite):
         self.y = self.rect.y
 
     def draw(self, screen):
-        screen.blit(self.back, self.backrect)
+        pygame.draw.rect(screen, self.button_color, pygame.Rect(self.rect.x-5, self.rect.y-5, self.rect.width+10, self.rect.height+10), 0, 3)
         screen.blit(self.text, self.rect)
+        
     
     def getBoundaries(self):
         return (self.x, self.y, self.width, self.height)
