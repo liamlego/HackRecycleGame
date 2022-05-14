@@ -23,7 +23,7 @@ Item Key values:
 
 class Item(pygame.sprite.Sprite):
 
-    def __init__(self, type, size):
+    def __init__(self, type, width, height):
         super().__init__()
         self.x = 0
         self.y = 0
@@ -32,9 +32,9 @@ class Item(pygame.sprite.Sprite):
         self.image = 0
         self.rect = 0
 
-        self.setImage(type, size)
+        self.setImage(type, width, height)
 
-    def setImage(self, type, size):
+    def setImage(self, type, width, height):
 
         str_img = ""
 
@@ -65,18 +65,19 @@ class Item(pygame.sprite.Sprite):
 
         self.image = pygame.image.load(os.path.join("images/items", str_img))
         pygame.Surface.convert_alpha(self.image)
-        self.rect = self.image.get_rect()
-        self.rect.size = size
+        self.rect = pygame.Rect(0, 0, 10, 10)
 
 
     # Set locaiton of the center of the item
     def setLocation(self, location): 
-        self.rect.center = location
+        self.rect.center = 0,0
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
     def update(self, event):
+        
+        """
         if event.type == MOUSEBUTTONDOWN:
             if self.rect.collidepoint(event.pos):
                 self.moving = True
@@ -91,4 +92,4 @@ class Item(pygame.sprite.Sprite):
             self.moving = False
 
         elif event.type == MOUSEMOTION and self.moving:
-            self.rect.move_ip(event.rel)
+            self.rect.move_ip(event.rel)"""

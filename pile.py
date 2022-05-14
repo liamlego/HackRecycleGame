@@ -3,6 +3,7 @@ import os
 from pygame.locals import *
 from bin import Bins
 from item import Item
+import random
 
 class Pile(pygame.sprite.Sprite):
 
@@ -19,20 +20,26 @@ class Pile(pygame.sprite.Sprite):
 
         self.bins = Bins()
 
-        self.item = 0
+        self.item = Item(0, 2, 2)
 
     def spawnItem(self, event):
-        self.item = Item()
+        type = random.randint(0,11)
+        self.item = Item(type, 2, 2)
 
 
     def render(self, screen):
         screen.blit(self.image, self.rect)
         self.bins.render(screen)
+        self.item.draw(screen)
         
     # decreases size of pile
     def update(self, gamelogic, event):
 
+        self.item.update(event)
+
         if event.type == MOUSEBUTTONDOWN and self.finished == False:
+
+            # Check pile click
             self.count += 1
             if(self.count % 3 == 0):
                 if self.rect.collidepoint(event.pos):
@@ -45,6 +52,7 @@ class Pile(pygame.sprite.Sprite):
                     self.rect.move_ip(self.image.get_width() / 2, self.image.get_height() / 2)
                     
                     # pick up item
+                    self.spawnItem(event)
 
             if(self.count == 15):
                 self.finished = True
