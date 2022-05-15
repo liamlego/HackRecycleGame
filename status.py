@@ -45,15 +45,19 @@ class SoundButton(pygame.sprite.Sprite):
         if gamelogic.soundlevel == 0:
             self.setImage("soundsmall.png")
             pygame.mixer.music.set_volume(.33)
+            pygame.mixer.Channel(0).set_volume(.33)
         elif gamelogic.soundlevel == 1:
             self.setImage("soundmedium.png")
             pygame.mixer.music.set_volume(.67)
+            pygame.mixer.Channel(0).set_volume(.67)
         elif gamelogic.soundlevel == 2:
             self.setImage("soundbig.png")
             pygame.mixer.music.set_volume(1)
+            pygame.mixer.Channel(0).set_volume(1)
         elif gamelogic.soundlevel == 3:
             self.setImage("soundmute.png")
             pygame.mixer.music.set_volume(0)
+            pygame.mixer.Channel(0).set_volume(0)
 
 class Heart:
 
@@ -114,7 +118,10 @@ class Status:
         for heart in self.hearts:
             if heart.should_draw:
                 heart.render(screen)
-        
+    
+    def click(self):
+        pygame.mixer.music.load("sounds/blipSelect.wav")
+        pygame.mixer.music.play()
         
     def moveScore(self, x, y):
         self.textrect.x = x
@@ -132,6 +139,7 @@ class Status:
         self.sound.update(gamelogic, event)
 
         if event.type == pygame.MOUSEBUTTONDOWN and self.home.rect.collidepoint(event.pos):
+            self.click()
             gamelogic.setState(0)
             scene.reset(gamelogic)
         

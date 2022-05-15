@@ -37,6 +37,7 @@ class Item(pygame.sprite.Sprite):
         self.moving = False
 
         self.picked = False
+        self.touched = False
 
         self.speed = 0
 
@@ -103,6 +104,11 @@ class Item(pygame.sprite.Sprite):
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
+    def updateTouch(self, event):
+        if event.type == MOUSEBUTTONDOWN:
+            if self.rect.collidepoint(event.pos):
+                self.touched = True
+            
     # updates item based on mouse input
     def update(self, event, bins, gamelogic):
         

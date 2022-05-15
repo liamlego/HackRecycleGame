@@ -6,7 +6,6 @@ class GameLogic:
         self.scene = MENU
         self.score = 0
         self.health = 3
-
         self.soundlevel = 3
 
     def getState(self):

@@ -15,7 +15,7 @@ class Renderer:
         self.running = True
         self.surface = None
         self.size = self.width, self.height = 1400, 900
-        
+        self.count = 0
         self.color = (255,255,255)
 
     def on_init(self):
@@ -24,12 +24,16 @@ class Renderer:
         self.running = True
 
         self.menu = Menu(self)
-        self.pile = Pile(self.width, self.height)
-        self.river = RiverScene(self.width, self.height)
+        self.pile = Pile(self.width, self.height, self.surface)
+        self.river = RiverScene(self.width, self.height, self.surface)
         self.bins = Bins()
 
         self.logic = GameLogic()
         self.item = Item(0, (2,2))
+
+        self.menupic = pygame.image.load(os.path.join("images", "menu.png"))
+        self.pilepic = pygame.image.load(os.path.join("images", "pileBackground.png"))
+        self.riverpic = pygame.image.load(os.path.join("images", "riverBackground.png"))
 
     #Event listener
     def on_event(self, event):
@@ -37,6 +41,9 @@ class Renderer:
             self.running = False
         if self.logic.getState() == 0:
             self.menu.update(self.logic, event)
+            if self.count == 0:
+                pygame.mixer.Channel(0).play(pygame.mixer.Sound("sounds/Menu.mp3"), -1)
+                self.count = 1
         elif self.logic.getState() == 2:
             self.river.update(self.logic, event)
         elif self.logic.getState() == 1:
@@ -44,8 +51,16 @@ class Renderer:
 
     # Render updater
     def on_render(self):
-        new_surface = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
-        self.surface.blit(new_surface, (0, 0))
+        
+        if self.logic.getState() == 0:
+            self.surface.blit(self.menupic, (0, 0))
+        elif self.logic.getState() == 1:
+            self.surface.blit(self.pilepic, (0, 0))
+        elif self.logic.getState() == 2:
+            self.surface.blit(self.riverpic, (0, 0))
+        else:
+            new_surface = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
+            self.surface.blit(new_surface, (0, 0))
         
         if self.logic.getState() == 0:
             self.menu.render(self.surface)

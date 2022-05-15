@@ -40,6 +40,7 @@ class Menu:
         self.main = pygame.Rect(1000, 540, 200, 200)
         self.easy = pygame.Rect(1050, 480, 100, 100)
         self.hard = pygame.Rect(1050, 680, 100, 100)
+
         self.earth = pygame.image.load(os.path.join("images", "earth.png"))
         self.earthrect = self.earth.get_rect()
         self.earthrect.x, self.earthrect.y = 900, 430
@@ -47,6 +48,11 @@ class Menu:
         self.easyearth = pygame.image.load(os.path.join("images", "tinyearth.png"))
         self.eearthrect = self.easyearth.get_rect()
         self.eearthrect.x, self.eearthrect.y = 1000, 430
+
+        self.font = pygame.font.Font('freesansbold.ttf', 30)
+
+        #self.easytext = pygame.
+
         self.hardearth = pygame.image.load(os.path.join("images", "tinyearth.png"))
         self.hearthrect = self.hardearth.get_rect()
         self.hearthrect.x, self.hearthrect.y = 1000, 630
@@ -70,12 +76,7 @@ class Menu:
 
 
     def render(self, screen):
-        screen.blit(self.image, self.rect)
-
-       
-
         self.soundb.render(screen)
-        #self.title.draw(screen)
 
         # Draw Buttons
         if self.stage == 0:

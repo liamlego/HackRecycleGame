@@ -10,7 +10,7 @@ from status import Status
 class Pile(pygame.sprite.Sprite):
 
     # takes width and height of window as params
-    def __init__(self, width, height):
+    def __init__(self, width, height, screen):
         super().__init__()
         self.count = 0
         self.finished = False
@@ -36,6 +36,13 @@ class Pile(pygame.sprite.Sprite):
         self.startbutton = pygame.Rect(self.startpopout_rect.x + 80, self.startpopout_rect.y + 388, 440, 50)
         self.endbutton = pygame.Rect(self.endpopout_rect.x + 80, self.endpopout_rect.y + 388, 440, 50)
 
+        self.bg = pygame.image.load(os.path.join("images", "pileBackground.png"))
+        self.bgrect = self.bg.get_rect()
+        self.bgrect.x = 0
+        self.bgrect.y = 0
+
+        self.bgrect.width = 1400
+        self.bgrect.height = 900
 
         # initialize image and rect
         self.image = pygame.image.load(os.path.join("images","pile.png")).convert_alpha()
@@ -44,9 +51,10 @@ class Pile(pygame.sprite.Sprite):
 
         self.bins = Bins()
 
-        self.item = Item(0, (0,0))
+        self.item = None
 
         self.status = Status(width, height)
+
 
     # spawn random recycle/ trash item
     def spawnItem(self):
@@ -65,6 +73,7 @@ class Pile(pygame.sprite.Sprite):
         self.start = True
         self.status.colorScore((255,255,255), gamelogic)
         self.status.moveScore(self.w - 100, 50)
+        self.item = None
         
 
     def render(self, screen, gamelogic):
@@ -111,8 +120,8 @@ class Pile(pygame.sprite.Sprite):
         if event.type == MOUSEBUTTONDOWN and not self.finished and not self.start:
 
             # Check pile click
-            if not self.itempicked:
-                if self.rect.collidepoint(event.pos):
+            if self.rect.collidepoint(event.pos):
+                if not self.itempicked:
                     self.count += 1
                     if(self.count % 3 == 0):
                         # adjust size of image
@@ -126,9 +135,13 @@ class Pile(pygame.sprite.Sprite):
                     # pick up item
                     self.spawnItem()
                     self.draw_item = True
+                else:
+                    pygame.mixer.music.load("sounds/putInTrash.wav")
+                    pygame.mixer.music.play()
                     
-        if self.item.update(event, self.bins, gamelogic):
+        if self.item != None and self.item.update(event, self.bins, gamelogic):
             if self.count == 15:
                 self.finished = True
             self.draw_item = False
             self.itempicked = False
+            self.item = None

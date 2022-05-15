@@ -10,7 +10,7 @@ from status import Status
 class RiverScene:
 
     # takes width and height of window as params
-    def __init__(self, width, height):
+    def __init__(self, width, height, screen):
         self.count = 0
         self.start = True
         self.finished = False       # True if level is over
@@ -24,6 +24,8 @@ class RiverScene:
 
         self.items = []
 
+        self.item = None
+
         self.endpopout_rect = pygame.Rect((self.width / 2) - 300, (self.height / 2) - 230, 500, 500)
         self.endsurface1 = pygame.image.load(os.path.join("images/start_end", "greatFinish.png")).convert_alpha()
         self.endsurface2 = pygame.image.load(os.path.join("images/start_end", "goodFinish.png")).convert_alpha()
@@ -34,6 +36,15 @@ class RiverScene:
 
         self.startbutton = pygame.Rect(self.startpopout_rect.x + 80, self.startpopout_rect.y + 388, 440, 50)
         self.endbutton = pygame.Rect(self.endpopout_rect.x + 80, self.endpopout_rect.y + 388, 440, 50)
+
+        self.bg = pygame.image.load(os.path.join("images", "riverBackground.png"))
+        self.bgrect = self.bg.get_rect()
+        self.bgrect.x = 0
+        self.bgrect.y = 0
+
+        self.bgrect.width = 1400
+        self.bgrect.height = 900
+        screen.blit(self.bg, self.bgrect)
 
         self.speedcount = 1
         self.speed = 3
@@ -58,10 +69,11 @@ class RiverScene:
         self.status.moveScore(self.width - 100, 50)
         gamelogic.health = 3
         self.speed = 3
+        self.itempicked = False
+        self.item = None
 
     # render items in river scene
     def render(self, screen, gamelogic):
-
         if self.start:
             screen.blit(self.startsurface, self.startpopout_rect)
             gamelogic.setState(2)
@@ -97,6 +109,7 @@ class RiverScene:
 
         if event.type == MOUSEBUTTONDOWN and self.start and self.startbutton.collidepoint(event.pos):
             self.start = False
+            self.itempicked = False
 
         if event.type == MOUSEBUTTONDOWN and self.finished and self.endbutton.collidepoint(event.pos):
             self.reset(gamelogic)
@@ -121,8 +134,17 @@ class RiverScene:
                 gamelogic.health = gamelogic.health-1
                 self.items.remove(item)
                 gamelogic.setScore(gamelogic.getScore()-5)
+            
+            item.updateTouch(event)
 
-            if not self.itempicked and item.update(event, self.bins, gamelogic):
+            if self.item == None and item.touched:
+                self.itempicked = True
+                self.item = item
+                
+            
+        if self.itempicked:
+            if self.item.update(event, self.bins, gamelogic):
                 self.draw_item = False
                 self.itempicked = False
-                self.items.remove(item)
+                self.items.remove(self.item)
+                self.item = None
