@@ -14,13 +14,16 @@ class Renderer:
     def __init__(self):
         self.running = True
         self.surface = None
+        self.background_surface = None
         self.size = self.width, self.height = 1400, 900
         self.count = 0
+        self.count1 = 0
         self.color = (255,255,255)
 
     def on_init(self):
         pygame.init()
         self.surface = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
+        self.background_surface = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self.running = True
 
         self.menu = Menu(self)
@@ -31,9 +34,9 @@ class Renderer:
         self.logic = GameLogic()
         self.item = Item(0, (2,2))
 
-        self.menupic = pygame.image.load(os.path.join("images", "menu.png"))
-        self.pilepic = pygame.image.load(os.path.join("images", "pileBackground.png"))
-        self.riverpic = pygame.image.load(os.path.join("images", "riverBackground.png"))
+        self.menupic = pygame.image.load(os.path.join("images", "menu.png")).convert()
+        self.pilepic = pygame.image.load(os.path.join("images", "pileBackground.png")).convert()
+        self.riverpic = pygame.image.load(os.path.join("images", "riverBackground.png")).convert()
 
     #Event listener
     def on_event(self, event):
@@ -52,15 +55,17 @@ class Renderer:
     # Render updater
     def on_render(self):
         
+        
         if self.logic.getState() == 0:
-            self.surface.blit(self.menupic, (0, 0))
+            self.background_surface.blit(self.menupic, (0, 0))
         elif self.logic.getState() == 1:
-            self.surface.blit(self.pilepic, (0, 0))
+            self.background_surface.blit(self.pilepic, (0, 0))
         elif self.logic.getState() == 2:
-            self.surface.blit(self.riverpic, (0, 0))
+            self.background_surface.blit(self.riverpic, (0, 0))
         else:
             new_surface = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
-            self.surface.blit(new_surface, (0, 0))
+            self.background_surface.blit(new_surface, (0, 0))
+            
         
         if self.logic.getState() == 0:
             self.menu.render(self.surface)

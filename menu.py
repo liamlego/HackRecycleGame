@@ -3,35 +3,6 @@ import os
 
 from status import SoundButton
 
-class Button(pygame.sprite.Sprite):
-    def __init__(self, xpos, ypos, text, fontsize):
-        self.x = xpos
-        self.y = ypos
-
-        self.button_color = (0,50,128)
-
-        # Button Text 
-        self.font = pygame.font.Font('freesansbold.ttf', fontsize)
-        self.textcolor = (255, 255, 255)
-
-        self.text = self.font.render(text, True, self.textcolor)
-
-        self.rect = self.text.get_rect()
-        self.rect.center = (xpos,ypos)
-
-        self.width = self.rect.width
-        self.height = self.rect.height
-        self.x = self.rect.x
-        self.y = self.rect.y
-
-    def draw(self, screen):
-        pygame.draw.rect(screen, self.button_color, pygame.Rect(self.rect.x-5, self.rect.y-5, self.rect.width+10, self.rect.height+10), 0, 5)
-        screen.blit(self.text, self.rect)
-        
-    
-    def getBoundaries(self):
-        return (self.x, self.y, self.width, self.height)
-
 class Menu:
 
     def __init__(self, renderer):
@@ -49,13 +20,21 @@ class Menu:
         self.eearthrect = self.easyearth.get_rect()
         self.eearthrect.x, self.eearthrect.y = 1000, 430
 
-        self.font = pygame.font.Font('freesansbold.ttf', 30)
+        self.font = pygame.font.Font('freesansbold.ttf', 40)
 
-        #self.easytext = pygame.
+        self.easytext = self.font.render("Easy", True, (255, 255, 255))
+        self.easytextrect = self.easytext.get_rect()
+        self.easytextrect.x, self.easytextrect.y = 1054, 518
+
+        
 
         self.hardearth = pygame.image.load(os.path.join("images", "tinyearth.png"))
         self.hearthrect = self.hardearth.get_rect()
         self.hearthrect.x, self.hearthrect.y = 1000, 630
+
+        self.hardtext = self.font.render("Hard", True, (255, 255, 255))
+        self.hardtextrect = self.hardtext.get_rect()
+        self.hardtextrect.x, self.hardtextrect.y = 1054, 718
 
         self.first = (self.main)
         self.second = (self.easy, self.hard)
@@ -81,12 +60,11 @@ class Menu:
         # Draw Buttons
         if self.stage == 0:
             screen.blit(self.earth, self.earthrect)
-            pygame.draw.rect(screen, (0,0,0), self.main, 1)
         elif self.stage == 1:
             screen.blit(self.easyearth, self.eearthrect)
+            screen.blit(self.easytext, self.easytextrect)
             screen.blit(self.hardearth, self.hearthrect)
-            pygame.draw.rect(screen, (0,0,0), self.easy, 1)
-            pygame.draw.rect(screen, (0,0,0), self.hard, 1)
+            screen.blit(self.hardtext, self.hardtextrect)
         
 
     def update(self, gamelogic, event):

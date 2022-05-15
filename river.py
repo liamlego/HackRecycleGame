@@ -65,7 +65,7 @@ class RiverScene:
         gamelogic.setScore(0)
         self.count = 0
         self.start = True
-        self.status.colorScore((255,255,255), gamelogic)
+        self.status.colorScore((0,0,0), gamelogic)
         self.status.moveScore(self.width - 100, 50)
         gamelogic.health = 3
         self.speed = 3
@@ -124,7 +124,7 @@ class RiverScene:
 
         if self.count%200 == 0 and not self.start:
             # Spawn item at beginning of river
-            self.spawnItem((50, 200))
+            self.spawnItem((50, 280))
             self.count = 0
             
         

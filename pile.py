@@ -71,7 +71,7 @@ class Pile(pygame.sprite.Sprite):
         self.itempicked = False
         self.count = 0
         self.start = True
-        self.status.colorScore((255,255,255), gamelogic)
+        self.status.colorScore((0,0,0), gamelogic)
         self.status.moveScore(self.w - 100, 50)
         self.item = None
         

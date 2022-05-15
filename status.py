@@ -95,7 +95,7 @@ class Status:
         self.sound = SoundButton(width, height)
 
         self.font = pygame.font.Font('freesansbold.ttf', 32)
-        self.textcolor = (255, 255, 255)
+        self.textcolor = (0, 0, 0)
 
         self.text = self.font.render("0", True, self.textcolor)
 
@@ -141,5 +141,6 @@ class Status:
         if event.type == pygame.MOUSEBUTTONDOWN and self.home.rect.collidepoint(event.pos):
             self.click()
             gamelogic.setState(0)
+            gamelogic.setScore(0)
             scene.reset(gamelogic)
         

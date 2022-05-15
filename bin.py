@@ -32,11 +32,11 @@ class Bin(pygame.sprite.Sprite):
 
 class Bins:
     def __init__(self):
-        self.plasticbin = Bin("plasticbin.png", 205, 505, 180, 256, 3)
-        self.metalbin = Bin("metalbin.png", 455, 505, 180, 256, 1)
-        self.glassbin = Bin("glassbin.png", 705, 505, 182, 255, 0)
-        self.paperbin = Bin("paperbin.png", 955, 505, 179, 255, 2)
-        self.trashbin = Bin("trashbin.png", 1205, 505, 180, 253, 4)
+        self.plasticbin = Bin("plasticbin.png", 205, 525, 180, 256, 3)
+        self.metalbin = Bin("metalbin.png", 455, 525, 180, 256, 1)
+        self.glassbin = Bin("glassbin.png", 705, 525, 182, 255, 0)
+        self.paperbin = Bin("paperbin.png", 955, 525, 179, 255, 2)
+        self.trashbin = Bin("trashbin.png", 1205, 525, 180, 253, 4)
         
         self.bins = (self.plasticbin, self.paperbin, self.metalbin, self.glassbin, self.trashbin)
 
