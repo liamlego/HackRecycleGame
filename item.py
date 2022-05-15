@@ -23,18 +23,22 @@ Item Key values:
 
 class Item(pygame.sprite.Sprite):
 
-    def __init__(self, type, width, height):
+    def __init__(self, type, location):
         super().__init__()
-        self.x = 0
-        self.y = 0
-        self.color = (255,255,255)
+
+        self.bintype = int(type / 3)
         
         self.image = 0
         self.rect = 0
+        self.moving = False
 
-        self.setImage(type, width, height)
+        self.picked = False
 
-    def setImage(self, type, width, height):
+        self.speed = 0
+
+        self.setImage(type, location)
+
+    def setImage(self, type, location):
 
         str_img = ""
 
@@ -45,7 +49,7 @@ class Item(pygame.sprite.Sprite):
         elif type == 2:
             str_img = "glass3.PNG"
         elif type == 3:
-            str_img = "matal2.PNG"
+            str_img = "metal2.PNG"
         elif type == 4:
             str_img = "metal1.PNG"
         elif type == 5:
@@ -65,31 +69,39 @@ class Item(pygame.sprite.Sprite):
 
         self.image = pygame.image.load(os.path.join("images/items", str_img))
         pygame.Surface.convert_alpha(self.image)
-        self.rect = pygame.Rect(0, 0, 10, 10)
+        self.rect = self.image.get_rect()
+        self.setLocation(location)
 
 
     # Set locaiton of the center of the item
     def setLocation(self, location): 
-        self.rect.center = 0,0
+        self.rect.x = location[0]
+        self.rect.y = location[1]
+
+    def moveWithSpeed(self):
+        if not self.picked:
+            self.setLocation((self.rect.x + self.speed, self.rect.y))
+
+    def setSpeed(self, speed):
+        self.speed = speed
+
+    def getLocation(self):
+        return (self.rect.x, self.rect.y)
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
     def update(self, event):
-        
-        """
+
         if event.type == MOUSEBUTTONDOWN:
             if self.rect.collidepoint(event.pos):
                 self.moving = True
+                self.picked = True
 
         elif event.type == MOUSEBUTTONUP:
-            # if collide with correct bin rect
-                # disapear
-                # increase score
-            # elif
-                # decrease score
-                # move to bottom center of screen ??
             self.moving = False
+            if self.picked:
+                self.setLocation((700,775))
 
         elif event.type == MOUSEMOTION and self.moving:
-            self.rect.move_ip(event.rel)"""
+            self.rect.move_ip(event.rel)
