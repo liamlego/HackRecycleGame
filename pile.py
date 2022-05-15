@@ -17,12 +17,23 @@ class Pile(pygame.sprite.Sprite):
         self.itempicked = False
         self.draw_item = False
         self.w, self.h = width, height
+        self.start = True
 
-        # end text
+        # finished pop out window
         self.font = pygame.font.Font('freesansbold.ttf', 45)
         self.text = self.font.render("Congratulations you finished!", True, (255,255,255))
         self.text_rect = self.text.get_rect()
         self.text_rect.center = (self.w / 2, self.h / 2)
+
+        self.endpopout_rect = pygame.Rect((self.w / 2) - 300, (self.h / 2) - 230, 500, 500)
+        self.endsurface = pygame.image.load(os.path.join("images", "pileFinish.png")).convert_alpha()
+
+        self.startpopout_rect = pygame.Rect((self.w / 2) - 300, (self.h / 2) - 230, 500, 500)
+        self.startsurface = pygame.image.load(os.path.join("images", "pileInstructions.png")).convert_alpha()
+
+        self.startbutton = pygame.Rect(self.startpopout_rect.x + 80, self.startpopout_rect.y + 388, 440, 50)
+        self.endbutton = pygame.Rect(self.endpopout_rect.x + 80, self.endpopout_rect.y + 388, 440, 50)
+
 
         # initialize image and rect
         self.image = pygame.image.load(os.path.join("images","pile.png")).convert_alpha()
@@ -35,9 +46,9 @@ class Pile(pygame.sprite.Sprite):
 
         self.status = Status(width, height)
 
-
+    # spawn random recycle/ trash item
     def spawnItem(self):
-        type = random.randint(0,11)
+        type = random.randint(0, 14)
         self.item = Item(type, pygame.mouse.get_pos())
         self.item.moving = True
         self.itempicked = True
@@ -46,33 +57,50 @@ class Pile(pygame.sprite.Sprite):
 
     def reset(self, gamelogic):
         self.finished = False
-        self.image = pygame.image.load(os.path.join("images","pile.png")).convert_alpha()
-        self.rect = self.image.get_rect()
-        self.rect.center = self.w / 2, self.h / 2 - (self.h / 4)
-        gamelogic.setScore(0)
         self.draw_item = False
         self.itempicked = False
         self.count = 0
+        self.start = True
+        self.status.colorScore((255,255,255), gamelogic)
+        self.status.moveScore(self.w - 100, 50)
         
 
-    def render(self, screen):
-        if not self.finished:
-            screen.blit(self.image, self.rect)
-            pygame.draw.rect(screen, (255,255,255), self.rect, 1)
+    def render(self, screen, gamelogic):
+        if self.start:
+            screen.blit(self.startsurface, self.startpopout_rect)
+            self.image = pygame.image.load(os.path.join("images","pile.png")).convert_alpha()
+            self.rect = self.image.get_rect()
+            self.rect.center = self.w / 2, self.h / 2 - (self.h / 4)
+            gamelogic.setScore(0)
+        else:
+            if not self.finished:
+                screen.blit(self.image, self.rect)
+
             self.bins.render(screen)
             if self.draw_item:
                 self.item.draw(screen)
-        else:
-            screen.blit(self.text, self.text_rect)
+
+            if self.finished:
+                screen.blit(self.endsurface, self.endpopout_rect)
+                self.status.moveScore(560, 322)
+                self.status.colorScore((65, 170, 47), gamelogic)
+                
         self.status.render(screen)
+
+        
         
     # decreases size of pile
     def update(self, gamelogic, event):
+        if event.type == MOUSEBUTTONDOWN and self.start and self.startbutton.collidepoint(event.pos):
+            self.start = False
+
+        if event.type == MOUSEBUTTONDOWN and self.finished and self.endbutton.collidepoint(event.pos):
+            self.reset(gamelogic)
 
         #self.item.update(event, self.bins, gamelogic)
         self.status.update(gamelogic, event, gamelogic.getScore(), self)
 
-        if event.type == MOUSEBUTTONDOWN and self.finished == False:
+        if event.type == MOUSEBUTTONDOWN and not self.finished and not self.start:
 
             # Check pile click
             if not self.itempicked:
@@ -91,8 +119,6 @@ class Pile(pygame.sprite.Sprite):
                     self.spawnItem()
                     self.draw_item = True
                     
-            # elif "Please sort the item you have picked before trying to spick another"
-
         if self.item.update(event, self.bins, gamelogic):
             if self.count == 15:
                 self.finished = True

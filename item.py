@@ -17,6 +17,9 @@ Item Key values:
 9: plastic1.PNG
 10: plastic2.PNG
 11: plastic3.PNG
+12: trash1.PNG
+13: trash2.PNG
+14: trash3.PNG
 
 """
 
@@ -30,6 +33,7 @@ class Item(pygame.sprite.Sprite):
         
         self.image = 0
         self.rect = 0
+        self.x, self.y = 0, 0
         self.moving = False
 
         self.picked = False
@@ -38,6 +42,7 @@ class Item(pygame.sprite.Sprite):
 
         self.setImage(type, location)
 
+    # loads correct image based on given type at given location
     def setImage(self, type, location):
 
         str_img = ""
@@ -66,20 +71,28 @@ class Item(pygame.sprite.Sprite):
             str_img = "plastic2.PNG"
         elif type == 11:
             str_img = "plastic3.PNG"
+        elif type == 12:
+            str_img = "trash1.PNG"
+        elif type == 13:
+            str_img = "trash2.PNG"
+        elif type == 14:
+            str_img = "trash3.PNG"
 
         self.image = pygame.image.load(os.path.join("images/items", str_img))
         pygame.Surface.convert_alpha(self.image)
         self.rect = self.image.get_rect()
+        self.x, self.y = location
         self.setLocation(location)
 
 
     # Set locaiton of the center of the item
     def setLocation(self, location): 
         self.rect.center = location
+        self.x, self.y = location
 
     def moveWithSpeed(self):
         if not self.picked:
-            self.rect.x = self.rect.x + self.speed
+            self.rect.x += self.speed
 
     def setSpeed(self, speed):
         self.speed = speed
@@ -90,26 +103,39 @@ class Item(pygame.sprite.Sprite):
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
+    # updates item based on mouse input
     def update(self, event, bins, gamelogic):
-
+        
+        # if item and mouse are in same location while mousebutton down
         if event.type == MOUSEBUTTONDOWN:
             if self.rect.collidepoint(event.pos):
                 self.moving = True
                 self.picked = True
 
+        # if item is released
         elif event.type == MOUSEBUTTONUP and self.picked:
             touched = False
             for bin in bins.getBins():
+                
+                # if item is over bin
                 if bin.collision_rect.colliderect(self.rect):
+                    
+                    # if correct bin, increase score & eat item
                     if self.bintype == bin.type:
                         touched = True
+                        bin.eat()
                         gamelogic.setScore(gamelogic.getScore() + 20)
                         return True
+                    
+                    # if incorrect bin, decrease score
                     else:
                         gamelogic.setScore(gamelogic.getScore() - 20)
+
+            # if item not over correct bin move to center bottom
             if not touched:
                 self.setLocation((700,775))
             self.moving = False
 
+        # item follows mouse if item should be moving
         elif event.type == MOUSEMOTION and self.moving:
             self.rect.move_ip(event.rel)

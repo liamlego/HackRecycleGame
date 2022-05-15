@@ -1,6 +1,8 @@
 import pygame
 import os
 
+from status import SoundButton
+
 class Button(pygame.sprite.Sprite):
     def __init__(self, xpos, ypos, text, fontsize):
         self.x = xpos
@@ -34,33 +36,38 @@ class Menu:
 
     def __init__(self, renderer):
 
-        self.title = Button(renderer.width/2, 50, "Recycle Rush", 100)
+        #self.title = Button(renderer.width/2, 50, "Recycle Rush", 100)
 
-        self.startgame = Button(renderer.width/2, renderer.height/2, "Easy", 50)
-        self.credits = Button(renderer.width/2, renderer.height/2+100, "Hard", 50)
-        self.settings = Button(renderer.width/2, renderer.height/2+200, "Settings", 50)
+        self.easy = Button(renderer.width/2, renderer.height/2, "Easy", 50)
+        self.hard = Button(renderer.width/2, renderer.height/2+100, "Hard", 50)
+        self.soundb = SoundButton(renderer.width, renderer.height)
+        self.main = pygame.Rect(1000, 530, 250, 250)
 
-        self.buttons = (self.startgame, self.credits, self.settings)
+        self.buttons = (self.easy, self.hard)
 
-        self.image = pygame.Surface([40, 40])
+        self.image = pygame.image.load(os.path.join("images", "menu.png"))
         self.rect = self.image.get_rect()
         self.rect.x = 0
         self.rect.y = 0
 
-        self.rect.width = 640
-        self.rect.width = 400
+        self.rect.width = renderer.width
+        self.rect.width = renderer.height
 
     def render(self, screen):
-
         screen.blit(self.image, self.rect)
 
-        self.title.draw(screen)
+        self.soundb.render(screen)
+        pygame.draw.rect(screen, (0,0,0), self.main, 1)
+        #self.title.draw(screen)
         # Draw Buttons
         for element in self.buttons:
             element.draw(screen)
         
 
     def update(self, gamelogic, event):
+
+        self.soundb.update(gamelogic, event)
+
         if event.type == pygame.MOUSEBUTTONDOWN:
             it = 0
             for button in self.buttons:
@@ -69,6 +76,4 @@ class Menu:
                         gamelogic.setState(1)
                     elif it == 1:
                         gamelogic.setState(2)
-                    elif it == 2:
-                        gamelogic.setState(3)
                 it = it + 1
