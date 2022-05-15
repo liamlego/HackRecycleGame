@@ -2,7 +2,7 @@ import pygame
 
 class GameLogic:
     def __init__(self):
-        MENU,SETTINGS,PILE,RIVER = 0, 1, 2, 3
+        MENU,PILE,RIVER = 0, 1, 2
         self.scene = MENU
         self.score = 0
         self.health = 3

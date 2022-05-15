@@ -71,8 +71,10 @@ class Heart:
         screen.blit(self.heartimage, self.heartrect)
 
     def update(self, gamelogic):
-        if gamelogic.health >= self.heartvalue:
+        if gamelogic.health >= self.heartvalue and gamelogic.getState() == 2:
             self.should_draw = True
+            # if gamelogic.health == 1:
+            #   self.heartrect.move()
         else:
             self.should_draw = False
 
@@ -118,7 +120,6 @@ class Status:
         self.text = self.font.render(str(gamelogic.getScore()), True, self.textcolor)
 
     def update(self, gamelogic, event, score, scene):
-
         for heart in self.hearts:
             heart.update(gamelogic)
 

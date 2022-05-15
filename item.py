@@ -134,6 +134,7 @@ class Item(pygame.sprite.Sprite):
             # if item not over correct bin move to center bottom
             if not touched:
                 self.setLocation((700,775))
+                
             self.moving = False
 
         # item follows mouse if item should be moving

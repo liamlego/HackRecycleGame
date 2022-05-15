@@ -8,6 +8,7 @@ from menu import Menu
 from bin import Bins
 from gameLogic import GameLogic
 
+
 class Renderer:
 
     def __init__(self):
@@ -49,7 +50,7 @@ class Renderer:
         if self.logic.getState() == 0:
             self.menu.render(self.surface)
         elif self.logic.getState() == 2:
-            self.river.render(self.surface)
+            self.river.render(self.surface, self.logic)
         elif self.logic.getState() == 1:
             self.pile.render(self.surface, self.logic)
 
@@ -61,15 +62,13 @@ class Renderer:
     def on_execute(self):
         if self.on_init() == False:
             self.running = False
-
         # Main game loop
         while( self.running ):
 
             for event in pygame.event.get():
                 self.on_event(event)
             
-            self.on_render()
-        
+            self.on_render()       
         # Exiting
         self.on_cleanup()
  

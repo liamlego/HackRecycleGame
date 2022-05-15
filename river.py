@@ -58,10 +58,11 @@ class RiverScene:
         self.speed = 3
 
     # render items in river scene
-    def render(self, screen):
+    def render(self, screen, gamelogic):
 
         if self.start:
             screen.blit(self.startsurface, self.startpopout_rect)
+            gamelogic.setState(2)
 
         elif not self.finished:
             self.bins.render(screen)

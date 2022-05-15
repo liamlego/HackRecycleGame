@@ -72,6 +72,7 @@ class Pile(pygame.sprite.Sprite):
             self.rect = self.image.get_rect()
             self.rect.center = self.w / 2, self.h / 2 - (self.h / 4)
             gamelogic.setScore(0)
+            gamelogic.setState(1)
         else:
             if not self.finished:
                 screen.blit(self.image, self.rect)

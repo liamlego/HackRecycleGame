@@ -36,14 +36,23 @@ class Menu:
 
     def __init__(self, renderer):
 
-        #self.title = Button(renderer.width/2, 50, "Recycle Rush", 100)
-
-        self.easy = Button(renderer.width/2, renderer.height/2, "Easy", 50)
-        self.hard = Button(renderer.width/2, renderer.height/2+100, "Hard", 50)
         self.soundb = SoundButton(renderer.width, renderer.height)
-        self.main = pygame.Rect(1000, 530, 250, 250)
+        self.main = pygame.Rect(1000, 540, 200, 200)
+        self.easy = pygame.Rect(1050, 480, 100, 100)
+        self.hard = pygame.Rect(1050, 680, 100, 100)
+        self.earth = pygame.image.load(os.path.join("images", "earth.png"))
+        self.earthrect = self.earth.get_rect()
+        self.earthrect.x, self.earthrect.y = 900, 430
 
-        self.buttons = (self.easy, self.hard)
+        self.easyearth = pygame.image.load(os.path.join("images", "tinyearth.png"))
+        self.eearthrect = self.easyearth.get_rect()
+        self.eearthrect.x, self.eearthrect.y = 1000, 430
+        self.hardearth = pygame.image.load(os.path.join("images", "tinyearth.png"))
+        self.hearthrect = self.hardearth.get_rect()
+        self.hearthrect.x, self.hearthrect.y = 1000, 630
+
+        self.first = (self.main)
+        self.second = (self.easy, self.hard)
 
         self.image = pygame.image.load(os.path.join("images", "menu.png"))
         self.rect = self.image.get_rect()
@@ -53,15 +62,26 @@ class Menu:
         self.rect.width = renderer.width
         self.rect.width = renderer.height
 
+        self.stage = 0
+
     def render(self, screen):
         screen.blit(self.image, self.rect)
 
+       
+
         self.soundb.render(screen)
-        pygame.draw.rect(screen, (0,0,0), self.main, 1)
         #self.title.draw(screen)
+
         # Draw Buttons
-        for element in self.buttons:
-            element.draw(screen)
+        if self.stage == 0:
+            screen.blit(self.earth, self.earthrect)
+            pygame.draw.rect(screen, (0,0,0), self.main, 1)
+        elif self.stage == 1:
+            screen.blit(self.easyearth, self.eearthrect)
+            screen.blit(self.hardearth, self.hearthrect)
+            pygame.draw.rect(screen, (0,0,0), self.easy, 1)
+            pygame.draw.rect(screen, (0,0,0), self.hard, 1)
+            
         
 
     def update(self, gamelogic, event):
@@ -69,11 +89,11 @@ class Menu:
         self.soundb.update(gamelogic, event)
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            it = 0
-            for button in self.buttons:
-                if button.rect.collidepoint(pygame.mouse.get_pos()):
-                    if it == 0:
-                        gamelogic.setState(1)
-                    elif it == 1:
-                        gamelogic.setState(2)
-                it = it + 1
+            if self.stage == 0 and self.main.collidepoint(pygame.mouse.get_pos()):
+                self.stage = 1
+            elif self.stage == 1 and self.easy.collidepoint(pygame.mouse.get_pos()):
+                gamelogic.setState(1)
+                self.stage = 0
+            elif self.stage == 1 and self.hard.collidepoint(pygame.mouse.get_pos()):
+                gamelogic.setState(2)
+                self.stage = 0
