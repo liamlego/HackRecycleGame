@@ -69,12 +69,17 @@ class Heart:
     
     def render(self, screen):
         screen.blit(self.heartimage, self.heartrect)
+        
 
     def update(self, gamelogic):
         if gamelogic.health >= self.heartvalue and gamelogic.getState() == 2:
             self.should_draw = True
-            # if gamelogic.health == 1:
-            #   self.heartrect.move()
+            # if last heart, WIGGLE
+            if gamelogic.health == 1:
+                if self.heartrect.x < 1210:
+                    self.heartrect.move_ip(1, 0)
+                elif self.heartrect.x > 1190:
+                    self.heartrect.move_ip(-1, 0)
         else:
             self.should_draw = False
 

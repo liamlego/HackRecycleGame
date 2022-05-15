@@ -23,6 +23,10 @@ class Bin(pygame.sprite.Sprite):
         screen.blit(self.image, self.rect)
 
     def eat(self):
+        pygame.mixer.music.load("sounds/pickupCoin.wav")
+        pygame.mixer.music.play()
+
+    def bad(self):
         pygame.mixer.music.load("sounds/putInTrash.wav")
         pygame.mixer.music.play()
 

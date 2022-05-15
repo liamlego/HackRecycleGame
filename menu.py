@@ -64,6 +64,11 @@ class Menu:
 
         self.stage = 0
 
+    def click(self):
+        pygame.mixer.music.load("sounds/blipSelect.wav")
+        pygame.mixer.music.play()
+
+
     def render(self, screen):
         screen.blit(self.image, self.rect)
 
@@ -81,7 +86,6 @@ class Menu:
             screen.blit(self.hardearth, self.hearthrect)
             pygame.draw.rect(screen, (0,0,0), self.easy, 1)
             pygame.draw.rect(screen, (0,0,0), self.hard, 1)
-            
         
 
     def update(self, gamelogic, event):
@@ -90,10 +94,13 @@ class Menu:
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.stage == 0 and self.main.collidepoint(pygame.mouse.get_pos()):
+                self.click()
                 self.stage = 1
             elif self.stage == 1 and self.easy.collidepoint(pygame.mouse.get_pos()):
                 gamelogic.setState(1)
+                self.click()
                 self.stage = 0
             elif self.stage == 1 and self.hard.collidepoint(pygame.mouse.get_pos()):
                 gamelogic.setState(2)
+                self.click()
                 self.stage = 0

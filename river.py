@@ -25,10 +25,12 @@ class RiverScene:
         self.items = []
 
         self.endpopout_rect = pygame.Rect((self.width / 2) - 300, (self.height / 2) - 230, 500, 500)
-        self.endsurface = pygame.image.load(os.path.join("images", "pileFinish.png")).convert_alpha()
+        self.endsurface1 = pygame.image.load(os.path.join("images/start_end", "greatFinish.png")).convert_alpha()
+        self.endsurface2 = pygame.image.load(os.path.join("images/start_end", "goodFinish.png")).convert_alpha()
+        self.endsurface3 = pygame.image.load(os.path.join("images/start_end", "badFinish.png")).convert_alpha()
 
         self.startpopout_rect = pygame.Rect((self.width / 2) - 300, (self.height / 2) - 230, 500, 500)
-        self.startsurface = pygame.image.load(os.path.join("images", "riverInstructions.png")).convert_alpha()
+        self.startsurface = pygame.image.load(os.path.join("images/start_end", "riverInstructions.png")).convert_alpha()
 
         self.startbutton = pygame.Rect(self.startpopout_rect.x + 80, self.startpopout_rect.y + 388, 440, 50)
         self.endbutton = pygame.Rect(self.endpopout_rect.x + 80, self.endpopout_rect.y + 388, 440, 50)
@@ -74,13 +76,22 @@ class RiverScene:
                 item.moveWithSpeed()
 
         elif self.finished:
-            screen.blit(self.endsurface, self.endpopout_rect)
+            # display correct endscreen
+            if gamelogic.getScore() > 300:
+                screen.blit(self.endsurface1, self.endpopout_rect)
+            elif gamelogic.getScore() > 50:
+                screen.blit(self.endsurface2, self.endpopout_rect)
+            else: 
+                screen.blit(self.endsurface3, self.endpopout_rect)
             self.status.moveScore(560, 322)
+            self.status.colorScore((65, 170, 47), gamelogic)
 
         self.status.render(screen)
         
     # updates river scene
     def update(self, gamelogic, event):
+        
+        
         if gamelogic.health == 0:
             self.finished = True
 
@@ -90,7 +101,7 @@ class RiverScene:
         if event.type == MOUSEBUTTONDOWN and self.finished and self.endbutton.collidepoint(event.pos):
             self.reset(gamelogic)
 
-        self.status.update(gamelogic, event, gamelogic.getScore(), self)    
+        self.status.update(gamelogic, event, gamelogic.getScore(), self)
 
         if self.speedcount%1000 == 0:
             self.speed = self.speed+1
@@ -111,7 +122,7 @@ class RiverScene:
                 self.items.remove(item)
                 gamelogic.setScore(gamelogic.getScore()-5)
 
-            if item.update(event, self.bins, gamelogic):
+            if not self.itempicked and item.update(event, self.bins, gamelogic):
                 self.draw_item = False
                 self.itempicked = False
                 self.items.remove(item)

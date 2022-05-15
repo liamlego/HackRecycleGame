@@ -130,6 +130,7 @@ class Item(pygame.sprite.Sprite):
                     # if incorrect bin, decrease score
                     else:
                         gamelogic.setScore(gamelogic.getScore() - 20)
+                        bin.bad()
 
             # if item not over correct bin move to center bottom
             if not touched:

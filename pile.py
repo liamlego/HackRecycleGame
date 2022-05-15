@@ -26,10 +26,12 @@ class Pile(pygame.sprite.Sprite):
         self.text_rect.center = (self.w / 2, self.h / 2)
 
         self.endpopout_rect = pygame.Rect((self.w / 2) - 300, (self.h / 2) - 230, 500, 500)
-        self.endsurface = pygame.image.load(os.path.join("images", "pileFinish.png")).convert_alpha()
+        self.endsurface1 = pygame.image.load(os.path.join("images/start_end", "greatFinish.png")).convert_alpha()
+        self.endsurface2 = pygame.image.load(os.path.join("images/start_end", "goodFinish.png")).convert_alpha()
+        self.endsurface3 = pygame.image.load(os.path.join("images/start_end", "badFinish.png")).convert_alpha()
 
         self.startpopout_rect = pygame.Rect((self.w / 2) - 300, (self.h / 2) - 230, 500, 500)
-        self.startsurface = pygame.image.load(os.path.join("images", "pileInstructions.png")).convert_alpha()
+        self.startsurface = pygame.image.load(os.path.join("images/start_end", "pileInstructions.png")).convert_alpha()
 
         self.startbutton = pygame.Rect(self.startpopout_rect.x + 80, self.startpopout_rect.y + 388, 440, 50)
         self.endbutton = pygame.Rect(self.endpopout_rect.x + 80, self.endpopout_rect.y + 388, 440, 50)
@@ -82,7 +84,12 @@ class Pile(pygame.sprite.Sprite):
                 self.item.draw(screen)
 
             if self.finished:
-                screen.blit(self.endsurface, self.endpopout_rect)
+                if gamelogic.getScore() > 250:
+                    screen.blit(self.endsurface1, self.endpopout_rect)
+                elif gamelogic.getScore() > 50:
+                    screen.blit(self.endsurface2, self.endpopout_rect)
+                else: 
+                    screen.blit(self.endsurface3, self.endpopout_rect)
                 self.status.moveScore(560, 322)
                 self.status.colorScore((65, 170, 47), gamelogic)
                 
