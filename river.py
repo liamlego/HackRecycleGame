@@ -36,6 +36,15 @@ class RiverScene:
 
     def reset(self, gamelogic):
         self.finished = False
+        """
+        self.finished = False
+        self.rect = self.image.get_rect()
+        self.rect.center = self.w / 2, self.h / 2 - (self.h / 4)
+        gamelogic.setScore(0)
+        self.draw_item = False
+        self.itempicked = False
+        self.count = 0
+        """
         gamelogic.setScore(0)
         
 
@@ -64,9 +73,14 @@ class RiverScene:
             self.count = 0
         
         self.count = self.count + 1
-        print(len(self.items))
         for item in self.items:
             if item.rect.x+item.rect.width/2 >= self.width:
                 self.items.remove(item)
-            item.update(event)
-            item.moveWithSpeed()
+                gamelogic.setScore(gamelogic.getScore()-5)
+
+            if item.update(event, self.bins, gamelogic):
+                self.draw_item = False
+                self.itempicked = False
+                self.items.remove(item)
+            else:
+                item.moveWithSpeed()

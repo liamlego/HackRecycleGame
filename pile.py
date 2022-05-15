@@ -41,6 +41,7 @@ class Pile(pygame.sprite.Sprite):
         self.item = Item(type, pygame.mouse.get_pos())
         self.item.moving = True
         self.itempicked = True
+        self.draw_item = True
         
 
     def reset(self, gamelogic):
@@ -49,6 +50,9 @@ class Pile(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = self.w / 2, self.h / 2 - (self.h / 4)
         gamelogic.setScore(0)
+        self.draw_item = False
+        self.itempicked = False
+        self.count = 0
         
 
     def render(self, screen):
@@ -65,7 +69,7 @@ class Pile(pygame.sprite.Sprite):
     # decreases size of pile
     def update(self, gamelogic, event):
 
-        self.item.update(event)
+        #self.item.update(event, self.bins, gamelogic)
         self.status.update(gamelogic, event, gamelogic.getScore(), self)
 
         if event.type == MOUSEBUTTONDOWN and self.finished == False:
@@ -86,20 +90,11 @@ class Pile(pygame.sprite.Sprite):
                     # pick up item
                     self.spawnItem()
                     self.draw_item = True
+                    
             # elif "Please sort the item you have picked before trying to spick another"
 
-        if event.type == MOUSEBUTTONUP and self.itempicked:
-            touched = False
-            for bin in self.bins.getBins():
-                if bin.collision_rect.colliderect(self.item.rect):
-                    if self.item.bintype == bin.type:
-                        self.draw_item = False
-                        self.itempicked = False
-                        touched = True
-                        gamelogic.setScore(gamelogic.getScore() + 20)
-                        if(self.count == 15):
-                            self.finished = True
-                    else:
-                        gamelogic.setScore(gamelogic.getScore() - 20)
-            if not touched:
-                self.item.setLocation((700,775))
+        if self.item.update(event, self.bins, gamelogic):
+            if self.count == 15:
+                self.finished = True
+            self.draw_item = False
+            self.itempicked = False

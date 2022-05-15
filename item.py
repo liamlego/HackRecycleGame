@@ -75,12 +75,11 @@ class Item(pygame.sprite.Sprite):
 
     # Set locaiton of the center of the item
     def setLocation(self, location): 
-        self.rect.x = location[0]
-        self.rect.y = location[1]
+        self.rect.center = location
 
     def moveWithSpeed(self):
         if not self.picked:
-            self.setLocation((self.rect.x + self.speed, self.rect.y))
+            self.rect.x = self.rect.x + self.speed
 
     def setSpeed(self, speed):
         self.speed = speed
@@ -91,17 +90,26 @@ class Item(pygame.sprite.Sprite):
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
-    def update(self, event):
+    def update(self, event, bins, gamelogic):
 
         if event.type == MOUSEBUTTONDOWN:
             if self.rect.collidepoint(event.pos):
                 self.moving = True
                 self.picked = True
 
-        elif event.type == MOUSEBUTTONUP:
-            self.moving = False
-            if self.picked:
+        elif event.type == MOUSEBUTTONUP and self.picked:
+            touched = False
+            for bin in bins.getBins():
+                if bin.collision_rect.colliderect(self.rect):
+                    if self.bintype == bin.type:
+                        touched = True
+                        gamelogic.setScore(gamelogic.getScore() + 20)
+                        return True
+                    else:
+                        gamelogic.setScore(gamelogic.getScore() - 20)
+            if not touched:
                 self.setLocation((700,775))
+            self.moving = False
 
         elif event.type == MOUSEMOTION and self.moving:
             self.rect.move_ip(event.rel)
